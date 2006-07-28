@@ -1,0 +1,1 @@
+cl final-tga.c -IDevIL/include /link DevIL/lib/DevIL.lib DevIL/lib/ILU.lib DevIL/lib/ILUT.lib

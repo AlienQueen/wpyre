@@ -1,0 +1,29 @@
+ok 0. localhost -> web.conf
+ok 1. 如果某个waiter卡死（节点死机或计算缓慢） 其他waiter接替
+ok 6. 自动获取任务，等待 checkbox
+ok 8. 目录
+ok 10. 判断项目是否存在
+ok 16. 分辨率
+OK 17. id前后空格
+OK 2. 完善GUI布局，
+OK 11. yafray内置,7zip内置
+OK 3. needer控制某个任务的重做
+	C:\wxWidgets-2.6.3\samples\drawing\vc_mswd
+	C:\wxWidgets-2.6.3\samples\grid\vc_mswd
+	C:\wxWidgets-2.6.3\samples\image\vc_mswd
+7. 客户获取进度信息
+9. 如果已有结果则不予以上传
+OK 12. sdl图片预览（最后wxwidgets实现）
+OK 13. 整合needer,waiter面板，另将waiter面板独立 C:\wxWidgets-2.6.3\samples\controls\vc_mswd(已经整合, 不独立暂时)
+OK 14. yafray目录 整合yafray，所以不需要了
+15. 环境检查curl, 7z, final-tga
+18. run后时间-run前时间
+ok 19. no cache
+20. 3的权限
+21. drag and drop C:\wxWidgets-2.6.3\samples\dnd\vc_mswd
+22. 执行程序时不会导致白屏 C:\wxWidgets-2.6.3\samples\exec\vc_mswd
+23. taskbar C:\wxWidgets-2.6.3\samples\taskbar\vc_mswd
+24. 署名
+
+4. Devil有个bug，或许不是 对tga文件，控制从左到右，从上到下，保存时有问题。因此整合的代码中（final-tga）有些蹩脚代码
+5. curl不支持，（逗号）作为文件名的一部分，我写了个patch，不过好像有bug，等待官方。现在用带patch版本的curl，这个环境中有些蹩脚的代码来屏蔽patch的bug，不想看curl了，等官方的补丁吧。
