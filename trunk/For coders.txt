@@ -1,0 +1,1 @@
+The first thing you should do is to install wxWidgets 2.6.3 to C:\wxWidgets-2.6.3 and get ready to use cl.exe of Microsoft Visual Studio .NET 2003 ;)
