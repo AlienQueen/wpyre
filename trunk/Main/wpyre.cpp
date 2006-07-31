@@ -348,7 +348,7 @@ MyFrame::MyFrame(const wxString& title)
     Needer_Panel = new wxPanel(m_book);
 		Needer_WxStaticTextFilename = new wxStaticText(Needer_Panel, ID_Needer_StaticTextFilename, wxT("File name:"), wxPoint(7,8), wxDefaultSize, 0, wxT("WxStaticTextID"));
 		Needer_WxStaticTextID = new wxStaticText(Needer_Panel, ID_Needer_StaticTextID,  wxT("ID:"), wxPoint(7,40), wxDefaultSize, 0, wxT("WxStaticTextFilename"));
-		Needer_WxTextFilename = new wxTextCtrl(Needer_Panel, ID_Needer_TextFilename, wxT("..\\Test\\source.7z"), wxPoint(80,8), wxSize(265,21), 0, wxDefaultValidator, wxT("WxTextFilename"));
+		Needer_WxTextFilename = new wxTextCtrl(Needer_Panel, ID_Needer_TextFilename, wxT("..\\Test\\source.zip"), wxPoint(80,8), wxSize(265,21), 0, wxDefaultValidator, wxT("WxTextFilename"));
 		Needer_WxTextID = new wxTextCtrl(Needer_Panel, ID_Needer_TextID, wxT(""), wxPoint(80,40), wxSize(265,21), 0, wxDefaultValidator, wxT("WxTextID"));
 		Needer_WxButtonOpen = new wxButton(Needer_Panel, ID_Needer_ButtonOpen, wxT("Select a file"), wxPoint(7,72), wxSize(75,21), 0, wxDefaultValidator, wxT("WxButtonOpen"));
 		Needer_WxButtonUpload = new wxButton(Needer_Panel, ID_Needer_ButtonUpload, wxT("Upload"), wxPoint(95,72), wxSize(75,21), 0, wxDefaultValidator, wxT("WxButtonUpload"));
@@ -441,7 +441,7 @@ void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::Needer_OnButtonOpen(wxCommandEvent& WXUNUSED(event))
 {
-    wxString Filename = wxFileSelector("Select a file", "", "", "", "*.7z");
+    wxString Filename = wxFileSelector("Select a file", "", "", "", "*.zip");
     //  *WxTextLog << _T(Filename);
 	if(strlen(Filename))
 	{
@@ -673,7 +673,7 @@ void MyFrame::Needer_OnButtonUpload(wxCommandEvent& WXUNUSED(event))
         {
             fprintf(fp, "cd temp\n");
 			fprintf(fp, "copy /y output.xml source.xml\n");
-			fprintf(fp, "..\\7z a -y source.7z *.*\n");
+			fprintf(fp, "..\\7z a -tzip -y source.zip *.*\n");
             fclose(fp);
             ExeCmdline("compress-source.bat");
 		}
@@ -684,7 +684,7 @@ void MyFrame::Needer_OnButtonUpload(wxCommandEvent& WXUNUSED(event))
         }
         else
         {
-            strcpy(line, "curl -o upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@\"temp\\source.7z\" \"http://localhost/needer-up.php?resx=%d&resy=%d\"");
+            strcpy(line, "curl -o upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@\"temp\\source.zip\" \"http://localhost/needer-up.php?resx=%d&resy=%d\"");
             HttpAddress((char *)&web, (char *)&line);
             fprintf(fp, line, resx, resy);
 
@@ -834,7 +834,7 @@ void MyFrame::Needer_OnButtonResult(wxCommandEvent& WXUNUSED(event))
 							HttpAddress((char *)&web, (char *)&line);
 							fprintf(fp1, line, TextID, filename, TextID, filename);
 						}
-						else if(fgetc(fp2)!='7')
+						else if(fgetc(fp2)!='P')
 						{
 							strcpy(line, "curl -o %s\\%s http://localhost/%s/%s\n");
 							HttpAddress((char *)&web, (char *)&line);
@@ -892,15 +892,15 @@ void MyFrame::Needer_OnButtonResult(wxCommandEvent& WXUNUSED(event))
     {
         //curl -F MAX_FILE_SIZE='104857600' -F userfile=@YBtest.xml http://localhost/needer-up.php
         fprintf(fp, "cd %s\n", TextID);
-        fprintf(fp, "..\\7z a -y %s.7z final.tga final.png\n", TextID);
+        fprintf(fp, "..\\7z a -tzip -y %s.zip final.tga final.png\n", TextID);
         fprintf(fp, "cd ..\n");
-        //fprintf(fp, "curl -o upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@final.7z http://localhost/needer-up.php?id=%s\n", TextID);
-        strcpy(line, "curl -o upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s\\%s.7z http://localhost/needer-up.php?id=%s\n");
+        //fprintf(fp, "curl -o upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@final.zip http://localhost/needer-up.php?id=%s\n", TextID);
+        strcpy(line, "curl -o upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s\\%s.zip http://localhost/needer-up.php?id=%s\n");
         HttpAddress((char *)&web, (char *)&line);
         fprintf(fp, line, TextID, TextID, TextID);
 
-        //fprintf(fp, "curl -o upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@final.7z http://localhost/needer-up.php?id=%s\n", TextID);
-        strcpy(line, "curl -o upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s\\%s.7z http://localhost/needer-up.php?id=%s\n");
+        //fprintf(fp, "curl -o upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@final.zip http://localhost/needer-up.php?id=%s\n", TextID);
+        strcpy(line, "curl -o upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s\\%s.zip http://localhost/needer-up.php?id=%s\n");
         HttpAddress((char *)&web, (char *)&line);
         fprintf(fp, line, TextID, TextID, TextID);
 
@@ -978,29 +978,29 @@ int MyFrame::Waiter_OnButtonRun_Sub()
     }
     else
     {
-        //curl -O http://localhost/source.7z.xml
+        //curl -O http://localhost/source.zip.xml
         fprintf(fp, "mkdir %s\n", TextID);
 
         strcpy(filename, TextID);
-        strcat(filename, "\\source.7z");
+        strcat(filename, "\\source.zip");
         if((fp1=fopen(filename, "r"))==NULL)
         {
-			*Waiter_WxTextLog << "Because source.7z doesn't exists, I will download it now.\n";
-			strcpy(line, "curl -o %s/source.7z http://localhost/%s/source.7z\n");
+			*Waiter_WxTextLog << "Because source.zip doesn't exists, I will download it now.\n";
+			strcpy(line, "curl -o %s/source.zip http://localhost/%s/source.zip\n");
 			HttpAddress((char *)&web, (char *)&line);
 			fprintf(fp, line, TextID, TextID);
         }
-        else if(fgetc(fp1)!='7')
+        else if(fgetc(fp1)!='P')
         {
-			*Waiter_WxTextLog << "Because source.7z is broken, I will download it again.\n";
-			strcpy(line, "curl -o %s/source.7z http://localhost/%s/source.7z\n");
+			*Waiter_WxTextLog << "Because source.zip is broken, I will download it again.\n";
+			strcpy(line, "curl -o %s/source.zip http://localhost/%s/source.zip\n");
 			HttpAddress((char *)&web, (char *)&line);
 			fprintf(fp, line, TextID, TextID);
 			fclose(fp1);
 		}
         else
         {
-		   *Waiter_WxTextLog << "Because source.7z exists, I won't download it again. ;)\n";
+		   *Waiter_WxTextLog << "Because source.zip exists, I won't download it again. ;)\n";
 			fclose(fp1);
 		}
 
@@ -1015,14 +1015,14 @@ int MyFrame::Waiter_OnButtonRun_Sub()
         ExeCmdline("waiter-download.bat");
 
         strcpy(filename, TextID);
-        strcat(filename, "\\source.7z");
+        strcat(filename, "\\source.zip");
 
         if((fp=fopen(filename, "r"))==NULL)
         {
             *Waiter_WxTextLog << "The project does not exist.\n";
             return 0;
         }
-        else if(fgetc(fp)!='7')
+        else if(fgetc(fp)!='P')
         {
             *Waiter_WxTextLog << "Error occurs while initializing.\n";
             fclose(fp);
@@ -1039,7 +1039,7 @@ int MyFrame::Waiter_OnButtonRun_Sub()
         }
         else
         {
-            fprintf(fp, "7z x -y -o%s %s\\source.7z\n", TextID, TextID);
+            fprintf(fp, "7z x -y -o%s %s\\source.zip\n", TextID, TextID);
 #ifdef DEBUG
 
             fprintf(fp, "pause\n");
@@ -1130,11 +1130,11 @@ int MyFrame::Waiter_OnButtonRun_Sub()
                             *Waiter_WxTextLog << "Creating compress script failed.\n";
                         }
                         else
-                        {	//7z a YBtest.7z YBtest.tga
+                        {	//7z a -tzip YBtest.zip YBtest.tga
                             strcpy(_7zname, filename);
-                            strcat(_7zname, ".7z");
+                            strcat(_7zname, ".zip");
                             fprintf(fp, "cd %s\n", TextID);
-                            fprintf(fp, "..\\7z a -y \"%s\" \"%s.tga\"\n", _7zname, filename);
+                            fprintf(fp, "..\\7z a -tzip -y \"%s\" \"%s.tga\"\n", _7zname, filename);
                             fprintf(fp, "cd ..\n");
 #ifdef DEBUG
 
@@ -1162,18 +1162,18 @@ int MyFrame::Waiter_OnButtonRun_Sub()
                                 }
                                 printf("%s", filename);
                                 //if i upload once, right reuslt return, but the file is not uploaded. I dont know why. when I upload again, it's ok, I think it is because of my patch on curl, it's dirty :)
-                                //fprintf(fp, "curl -o upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s/%s.7z http://localhost/waiter-up.php?id=%s\n", TextID, filename, TextID);
-                                //fprintf(fp, "curl -o upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s/%s.7z http://localhost/waiter-up.php?id=%s\n", TextID, filename, TextID);
+                                //fprintf(fp, "curl -o upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s/%s.zip http://localhost/waiter-up.php?id=%s\n", TextID, filename, TextID);
+                                //fprintf(fp, "curl -o upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s/%s.zip http://localhost/waiter-up.php?id=%s\n", TextID, filename, TextID);
                                 //somedays later, dir will be added, tired of it today
-                                //fprintf(fp, "curl -o %s/upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s/%s.7z http://localhost/waiter-up.php?id=%s\n", TextID, TextID, filename, TextID);
-                                strcpy(line, "curl -o %s/upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s/%s.7z http://localhost/waiter-up.php?id=%s\n");
+                                //fprintf(fp, "curl -o %s/upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s/%s.zip http://localhost/waiter-up.php?id=%s\n", TextID, TextID, filename, TextID);
+                                strcpy(line, "curl -o %s/upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s/%s.zip http://localhost/waiter-up.php?id=%s\n");
                                 HttpAddress((char *)&web, (char *)&line);
                                 fprintf(fp, line, TextID, TextID, filename, TextID);
 
 
-                                //fprintf(fp, "curl -o %s/upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s/%s.7z http://localhost/waiter-up.php?id=%s\n", TextID, TextID, filename, TextID);
+                                //fprintf(fp, "curl -o %s/upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s/%s.zip http://localhost/waiter-up.php?id=%s\n", TextID, TextID, filename, TextID);
 
-                                strcpy(line, "curl -o %s/upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s/%s.7z http://localhost/waiter-up.php?id=%s\n");
+                                strcpy(line, "curl -o %s/upresult.txt -F MAX_FILE_SIZE='104857600' -F userfile=@%s/%s.zip http://localhost/waiter-up.php?id=%s\n");
                                 HttpAddress((char *)&web, (char *)&line);
                                 fprintf(fp, line, TextID, TextID, filename, TextID);
 
@@ -1241,22 +1241,22 @@ void MyFrame::Waiter_OnButtonResult(wxCommandEvent& WXUNUSED(event))
         else
     {
 
-        strcpy(line, "curl -o%s/%s.7z http://localhost/%s/%s.7z\n");
+        strcpy(line, "curl -o%s/%s.zip http://localhost/%s/%s.zip\n");
         HttpAddress((char *)&web, (char *)&line);
         fprintf(fp, line, TextID, TextID, TextID, TextID);
 
-        fprintf(fp, "7z x -y -o%s %s/%s.7z\n", TextID, TextID, TextID);
+        fprintf(fp, "7z x -y -o%s %s/%s.zip\n", TextID, TextID, TextID);
         fclose(fp);
         ExeCmdline("waiter-download.bat");
         strcpy(line, TextID);
         strcat(line, "\\");
         strcat(line, TextID);
-        strcat(line, ".7z");
+        strcat(line, ".zip");
         if((fp=fopen(line, "r"))==NULL)
             *Waiter_WxTextLog << "Task has not been finished.\n";
         else
         {
-            if(fgetc(fp)!='7')
+            if(fgetc(fp)!='P')
                 *Waiter_WxTextLog << "Task has not been finished.\n";
             else
                 *Waiter_WxTextLog << "File downloaded.\n";

@@ -25,7 +25,7 @@ SetOutPath $INSTDIR
 File *.txt *.nsi
 
 SetOutPath $INSTDIR\Main
-File Main\*.exe Main\*.dll Main\*.c Main\*.cpp Main\compile.bat Main\final-tga.bat Main\neederconf.txt Main\makefile.vc Main\wpyre.rc Main\share.ico Main\cmd.exe.lnk Main\blank.png
+File Main\*.exe Main\*.dll Main\*.c Main\*.cpp Main\compile.bat Main\final-tga.bat Main\neederconf.txt Main\waiterconf.txt Main\makefile.vc Main\wpyre.rc Main\share.ico Main\cmd.exe.lnk Main\blank.png
 
 SetOutPath $INSTDIR\Main\Expat-2.0.0
 File /r Main\Expat-2.0.0\*.*
